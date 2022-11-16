@@ -96,6 +96,9 @@ const Astro = mongoose.model(
         },
         termConditions: {
             type: String
+        },
+        password: {
+            type: String
         }
     }, { timestamps: true })
 )
