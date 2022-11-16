@@ -1,5 +1,5 @@
 const { verifySignUp } = require("../middlewares");
-const { AstroverifySignUp } = require("../astrologerMiddlewares");
+// const { AstroverifySignUp } = require("../astrologerMiddlewares");
 const controller = require("../controllers/auth.controller");
 const astroController = require('../controllers/astro.controller')
 
