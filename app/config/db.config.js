@@ -6,7 +6,7 @@
 
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb+srv://naveen:naveenojha@cluster0.4zqsizj.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://naveen:naveenojha@cluster0.4zqsizj.mongodb.net/astrotalk?retryWrites=true&w=majority', {
   useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true,
