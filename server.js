@@ -13,7 +13,7 @@ let path = require('path');
 
 
 let corsOptions = {
-  origin: "https://astrotalkclient.herokuapp.com"
+  origin: ["https://astrotalkclient.herokuapp.com", "http://localhost:3000"]
 };
 
 // let corsOptions = {
