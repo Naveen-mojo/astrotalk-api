@@ -1,7 +1,7 @@
 const Stripe = require("stripe");
 const Order = require("../models/stripe.model");
 const stripe = Stripe("sk_test_51LpoOQSCkptFWpk2yUOUAKc1UDTdwZ6SzleVz9TG7BnQWbEr4sOpNdZweiF0Ba16GLhugR9Zs8pLzo7P39fjq24p00IfBRUdn1")
-
+require('dotenv')
 
 
 exports.stripePayment = async (req, res) => {
@@ -13,7 +13,6 @@ exports.stripePayment = async (req, res) => {
         product: JSON.stringify(req.body.product)
       }
     })
-
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
@@ -22,7 +21,7 @@ exports.stripePayment = async (req, res) => {
             product_data: {
               name: req.body.product.name,
             },
-            unit_amount: req.body.product.price,
+            unit_amount: req.body.product.price * 100,
           },
           quantity: 1,
         },
@@ -30,8 +29,8 @@ exports.stripePayment = async (req, res) => {
       billing_address_collection: "auto",
       customer: customer.id,
       mode: 'payment',
-      success_url: `http://localhost:3000/success`,
-      cancel_url: `http://localhost:3000/cancel`,
+      success_url: `${process.env.CLIENT_URL}/success`,
+      cancel_url: `${process.env.CLIENT_URL}/cancel`,
     });
 
     res.send({ url: session.url });
