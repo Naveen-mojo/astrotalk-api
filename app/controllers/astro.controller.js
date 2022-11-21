@@ -58,7 +58,7 @@ exports.getAstro = async (req, res) => {
   try {
     const astro = await Astro.find({
       isActive: 1,
-    });
+    }, { password: 0, verifyCode: 0 });
     res.status(200).json(astro);
   } catch (error) {
     console.log(error);
@@ -72,7 +72,7 @@ exports.getByIdAstro = async (req, res) => {
     const astro = await Astro.findById({
       _id: astroId,
       isActive: 1,
-    });
+    },{ password: 0, verifyCode: 0 });
     res.status(200).json(astro);
   } catch (error) {
     console.log(error);
@@ -187,7 +187,6 @@ exports.updateAstroProfile = async (req, res) => {
       res.status(400).send({ message: "No changes to update." });
       return;
     }
-    console.log(req.body)
     const data = {
       astrologerName: req.body.astrologerName,
       email: req.body.email,
