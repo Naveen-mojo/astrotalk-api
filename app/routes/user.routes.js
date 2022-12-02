@@ -8,6 +8,7 @@ const astroController = require("../controllers/astro.controller");
 const paymentController = require("../controllers/stripe");
 // const signUpController = require('../astrologerController/signup.controller');
 const addmoneywallet  = require('../controllers/addmoney.controller');
+const videocallController = require('../controllers/videocall.controller');
 
 
 module.exports = function (app) {
@@ -67,6 +68,12 @@ module.exports = function (app) {
   app.post('/create-checkout-session', paymentController.stripePayment)
 
   app.post('/webhook', paymentController.webhooks)
+
+// Video Call Api
+
+app.post('/api/videocall/add',videocallController.addVideoCall);
+
+app.get('/api/videocall/all',videocallController.getVideoCall);
 
 
   // Astrologer SignUp

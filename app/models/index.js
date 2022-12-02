@@ -14,6 +14,7 @@ db.kundli = require('./kundli.model');
 db.astro = require('./astro.model');
 db.astroRefreshToken = require('./AstrologerRefreshToken.model');
 db.addwallet = require('./addMoneyWallet.model')
+db.videocall = require('./videocall.model')
 
 db.ROLES = ["user", "admin", "moderator"];
 

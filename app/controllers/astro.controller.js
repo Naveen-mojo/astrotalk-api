@@ -61,7 +61,6 @@ exports.getAstro = async (req, res) => {
     }, { password: 0, verifyCode: 0 });
     res.status(200).json(astro);
   } catch (error) {
-    console.log(error);
     res.status(500).send({ message: error });
   }
 };
