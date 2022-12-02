@@ -25,7 +25,3 @@ exports.getVideoCall = async (req, res) => {
         res.status(500).send(error)
     }
 }
-
-exports.updateVideoCall = (req, res) => {
-
-}
