@@ -13,7 +13,7 @@ let path = require('path');
 
 
 let corsOptions = {
-  origin: ["http://localhost:3000", "https://astro-api-jrmt.onrender.com", "http://astro-api-jrmt.onrender.com", "https://638d987e2becdf40306e324a--astro-client.netlify.app", "http://638d987e2becdf40306e324a--astro-client.netlify.app"]
+  origin: ["http://localhost:3000", "https://astro-api-jrmt.onrender.com", "http://astro-api-jrmt.onrender.com", "https://astro-client.netlify.app", "http://astro-client.netlify.app"]
 };
 
 // let corsOptions = {
