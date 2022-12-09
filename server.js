@@ -72,15 +72,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use('/assets', express.static(path.join(__dirname, 'app/assets')));
-
-app.get('/videocall', (req, res) => {
-  res.sendFile(__dirname + '/app/index.html');
-});
-
-
-io.of('/stream').on('connection', stream);
-
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
