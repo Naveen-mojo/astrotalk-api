@@ -30,7 +30,7 @@ exports.addAstro = (req, res) => {
     callRate: req.body.callRate,
     contactExt: req.body.contactExt,
     contactNumber: req.body.contactNumber,
-    profileImage: `https://astrotalkapi.herokuapp.com/upload/${req.file.filename}`,
+    profileImage: `http://localhost:8080/upload/${req.file.filename}`,
     galleryImage: req.body.galleryImage,
     isActive: req.body.isActive,
     isValid: req.body.isValid,
