@@ -7,9 +7,6 @@ require('dotenv').config()
 const app = express();
 
 let server = require('http').Server(app);
-let io = require('socket.io')(server);
-let stream = require('./app/ws/stream');
-let path = require('path');
 
 
 let corsOptions = {
