@@ -20,7 +20,7 @@ const VideoCall = mongoose.model(
         },
         endTime: {
             type: String,
-            required: true
+            required: false
         },
         status: {
             type: Number,
