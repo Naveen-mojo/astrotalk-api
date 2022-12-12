@@ -73,8 +73,8 @@ const Astro = mongoose.model(
         isActive: {
             type: Number
         },
-        isValid: {
-            type: String
+        status: {
+            type: Number
         },
         verifyCode: {
             type: String
