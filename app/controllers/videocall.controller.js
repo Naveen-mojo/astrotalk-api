@@ -25,3 +25,15 @@ exports.getVideoCall = async (req, res) => {
         res.status(500).send(error)
     }
 }
+
+exports.updateVideoCall = async (req, res) => {
+    const _id = req.params.id
+    try {
+        const data = await VideoCall.updateOne({ _id }, { $set: { endTime:req.body.endTime, status: req.body.status } }, {
+            new: true
+        })
+        res.status(200).send({ message: "Data Updated Successfully!", data: data })
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}

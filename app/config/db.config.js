@@ -10,7 +10,7 @@ mongoose.connect('mongodb+srv://naveen:naveenojha@cluster0.4zqsizj.mongodb.net/a
   useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useFindAndModify: true
+  useFindAndModify: true,
 }).then(() => {
   console.log("Successfully connect to MongoDB.")
 }).catch((error) => {

@@ -7,7 +7,7 @@ const messageController = require("../controllers/message.controller");
 const astroController = require("../controllers/astro.controller");
 const paymentController = require("../controllers/stripe");
 // const signUpController = require('../astrologerController/signup.controller');
-const addmoneywallet  = require('../controllers/addmoney.controller');
+const addmoneywallet = require('../controllers/addmoney.controller');
 const videocallController = require('../controllers/videocall.controller');
 
 
@@ -69,11 +69,13 @@ module.exports = function (app) {
 
   app.post('/webhook', paymentController.webhooks)
 
-// Video Call Api
+  // Video Call Api
 
-app.post('/api/videocall/add',videocallController.addVideoCall);
+  app.post('/api/videocall/add', videocallController.addVideoCall);
 
-app.get('/api/videocall/all',videocallController.getVideoCall);
+  app.get('/api/videocall/all', videocallController.getVideoCall);
+
+  app.patch('/api/videocall/update/:id', videocallController.updateVideoCall);
 
 
   // Astrologer SignUp
