@@ -64,6 +64,8 @@ module.exports = function (app) {
 
   app.patch("/api/astro/update/:id", upload.single('profileImage'), astroController.updateAstroProfile);
 
+  app.patch("/api/astro/update/status/:id", astroController.updateStatus);
+
   // payments gateways
   app.post('/create-checkout-session', paymentController.stripePayment)
 

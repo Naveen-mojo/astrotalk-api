@@ -33,7 +33,7 @@ exports.addAstro = (req, res) => {
     profileImage: `http://localhost:8080/upload/${req.file.filename}`,
     galleryImage: req.body.galleryImage,
     isActive: req.body.isActive,
-    isValid: req.body.isValid,
+    status: req.body.status,
     verifyCode: req.body.verifyCode,
     interviewTime: req.body.interviewTime,
     incomeSource: req.body.incomeSource,
@@ -71,7 +71,7 @@ exports.getByIdAstro = async (req, res) => {
     const astro = await Astro.findById({
       _id: astroId,
       isActive: 1,
-    },{ password: 0, verifyCode: 0 });
+    }, { password: 0, verifyCode: 0 });
     res.status(200).json(astro);
   } catch (error) {
     console.log(error);
@@ -192,17 +192,17 @@ exports.updateAstroProfile = async (req, res) => {
       shortName: req.body.shortName,
       gender: req.body.gender,
       DOB: req.body.DOB,
-      primarySkills: JSON.parse(req.body.primarySkills),
+      primarySkills: req.body.primarySkills,
       hours: req.body.hours,
       isPlatform: req.body.isPlatform,
       monthlyEarning: req.body.monthlyEarning,
       nameOfPlatform: req.body.nameOfPlatform,
-      skill: JSON.parse(req.body.skill),
+      skill: req.body.skill,
       description: req.body.description,
       cityName: req.body.cityName,
       onBoard: req.body.onBoard,
       exp: req.body.exp,
-      language: JSON.parse(req.body.language),
+      language: req.body.language,
       chatRate: req.body.chatRate,
       callRate: req.body.callRate,
       contactExt: req.body.contactExt,
@@ -214,7 +214,7 @@ exports.updateAstroProfile = async (req, res) => {
       incomeSource: req.body.incomeSource,
       isLoggedin: req.body.isLoggedin,
       password: req.body.password,
-
+      status: req.body.status
     }
     const astro = await Astro.findByIdAndUpdate(_id, data, {
       useFindAndModify: false,
@@ -230,6 +230,19 @@ exports.updateAstroProfile = async (req, res) => {
     }
     res.status(200).send({ message: "Data Updated Successfully!", data: astro });
   } catch (error) {
+    console.log(error)
     res.status(500).send({ message: error });
   }
 };
+
+exports.updateStatus = async (req, res) => {
+  const _id = req.params.id;
+  try {
+    const data = await Astro.updateOne({ _id }, { status: req.body.status }, {
+      new: true
+    });
+    res.status(200).send({ message: "Data Updated Successfully!", data: data });
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+}
