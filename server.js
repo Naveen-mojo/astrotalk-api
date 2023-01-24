@@ -9,15 +9,15 @@ const app = express();
 let server = require('http').Server(app);
 
 
-let corsOptions = {
-  origin: ["http://localhost:3000", "https://astro-api-jrmt.onrender.com", "http://astro-api-jrmt.onrender.com", "https://astro-client.netlify.app", "http://astro-client.netlify.app"]
-};
+// let corsOptions = {
+//   origin: ["http://localhost:3000", "https://astro-api-jrmt.onrender.com", "http://astro-api-jrmt.onrender.com", "https://astro-client.netlify.app", "http://astro-client.netlify.app"]
+// };
 
 // let corsOptions = {
 //   origin: "http://localhost:3000"
 // };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
