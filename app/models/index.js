@@ -16,6 +16,10 @@ db.astroRefreshToken = require('./AstrologerRefreshToken.model');
 db.addwallet = require('./addMoneyWallet.model')
 db.videocall = require('./videocall.model')
 
+db.horoscope = require('./horoscope.model')
+db.horoscopecontent = require('./horoscopecontent.model')
+db.zodiac = require('./zodiac.model')
+
 db.ROLES = ["user", "admin", "moderator"];
 
 module.exports = db;

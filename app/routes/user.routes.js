@@ -10,6 +10,10 @@ const paymentController = require("../controllers/stripe");
 const addmoneywallet = require('../controllers/addmoney.controller');
 const videocallController = require('../controllers/videocall.controller');
 
+const horoscopeController = require('../controllers/horoscope.controller')
+const horoscopeContentController = require('../controllers/horoscopeContent.controller')
+const zodiacController = require('../controllers/zodiac.controller')
+
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -90,6 +94,13 @@ module.exports = function (app) {
   app.post('/api/addmoneywallet', addmoneywallet.addMoneyWallet)
 
   app.get('/api/walletmoney', addmoneywallet.getWalletMoney)
+
+
+  // Horoscope Api
+  app.post('/horoscope/add', horoscopeController.addHoroscope)
+  app.post('/horoscope/content/add', horoscopeContentController.addHoroscopeContent)
+  app.post('/zodiac/add', zodiacController.addZodiac)
+
 
 
 
