@@ -13,6 +13,7 @@ const videocallController = require('../controllers/videocall.controller');
 const horoscopeController = require('../controllers/horoscope.controller')
 const horoscopeContentController = require('../controllers/horoscopeContent.controller')
 const zodiacController = require('../controllers/zodiac.controller')
+const zodiacCompatibilityController = require('../controllers/zodiacCompatibility.controller')
 
 
 module.exports = function (app) {
@@ -100,6 +101,7 @@ module.exports = function (app) {
   app.post('/horoscope/add', horoscopeController.addHoroscope)
   app.post('/horoscope/content/add', horoscopeContentController.addHoroscopeContent)
   app.post('/zodiac/add', zodiacController.addZodiac)
+  app.post('/zodiacCompatibility/add', zodiacCompatibilityController.addZodiacCompatibility)
 
 
 

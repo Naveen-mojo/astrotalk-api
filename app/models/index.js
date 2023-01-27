@@ -19,6 +19,7 @@ db.videocall = require('./videocall.model')
 db.horoscope = require('./horoscope.model')
 db.horoscopecontent = require('./horoscopecontent.model')
 db.zodiac = require('./zodiac.model')
+db.zodiacCompatibility = require('./zodiacCompatibility.model')
 
 db.ROLES = ["user", "admin", "moderator"];
 
