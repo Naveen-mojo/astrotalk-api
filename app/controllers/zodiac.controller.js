@@ -14,3 +14,13 @@ exports.addZodiac = async (req, res) => {
         res.status(500).send(err)
     }
 }
+
+// Get Message
+exports.getZodiac = async (req, res) => {
+    try {
+        const zodiac = await Zodiac.find({});
+        res.status(200).json(zodiac);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+};

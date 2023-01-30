@@ -72,7 +72,7 @@ module.exports = function (app) {
   app.patch("/api/astro/update/status/:id", astroController.updateStatus);
 
   // payments gateways
-  app.post('/create-checkout-session', paymentController.stripePayment)
+  app.post('/api/create-checkout-session', paymentController.stripePayment)
 
   app.post('/webhook', paymentController.webhooks)
 
@@ -101,6 +101,7 @@ module.exports = function (app) {
   app.post('/horoscope/add', horoscopeController.addHoroscope)
   app.post('/horoscope/content/add', horoscopeContentController.addHoroscopeContent)
   app.post('/zodiac/add', zodiacController.addZodiac)
+  app.get('/api/zodiac/all', zodiacController.getZodiac)
   app.post('/zodiacCompatibility/add', zodiacCompatibilityController.addZodiacCompatibility)
 
 

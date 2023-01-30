@@ -15,6 +15,9 @@ const ZodiacCompatibility = mongoose.model(
         },
         slug: {
             type: String
+        },
+        image: {
+            type: String
         }
     }, { timestamps: true })
 )

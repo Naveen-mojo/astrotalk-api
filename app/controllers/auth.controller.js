@@ -1,6 +1,7 @@
 const config = require("../config/auth.config");
 const db = require("../models");
 const { user: User, role: Role, refreshToken: RefreshToken } = db;
+const moment = require('moment')
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -8,7 +9,7 @@ const bcrypt = require("bcryptjs");
 exports.signup = (req, res) => {
   const user = new User({
     number: req.body.number,
-    username: req.body.username,
+    firstname: req.body.firstname,
     email: req.body.email,
     OTPVerification: req.body.OTPVerification,
     password: bcrypt.hashSync(req.body.password, 8),
@@ -116,7 +117,7 @@ exports.signin = (req, res) => {
       let token = jwt.sign(
         {
           id: user.id,
-          username: user.username,
+          firstname: user.firstname,
           number: user.number,
           wallet: user.wallet,
         },
@@ -135,7 +136,7 @@ exports.signin = (req, res) => {
       }
       res.status(200).send({
         id: user._id,
-        username: user.username,
+        firstname: user.firstname,
         number: user.number,
         wallet: user.wallet,
         roles: authorities,
@@ -183,7 +184,7 @@ exports.refreshToken = async (req, res) => {
         let newAccessToken = jwt.sign(
           {
             id: refreshToken.user._id,
-            username: user.username,
+            firstname: user.firstname,
             number: user.number,
             wallet: user.wallet,
           },
@@ -226,11 +227,11 @@ exports.refreshToken = async (req, res) => {
 //get a user
 exports.getUserById = async (req, res) => {
   const userId = req.query.userId;
-  const username = req.query.username;
+  const firstname = req.query.firstname;
   try {
     const user = userId
       ? await User.findById(userId)
-      : await User.findOne({ username: username });
+      : await User.findOne({ firstname: firstname });
     const { password, updatedAt, ...other } = user._doc;
     res.status(200).json(other);
   } catch (err) {
@@ -241,14 +242,21 @@ exports.getUserById = async (req, res) => {
 //update user
 exports.updateUser = async (req, res) => {
   const _id = req.params.id;
-  con
   try {
-    const data = await User.updateOne(
-      { _id },
-      { status: req.body.status },
-      {
-        new: true,
+    const data = await User.updateOne({ _id }, {
+      $set: {
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        datebirth: moment(req.body.datebirth).format("YYYY-MM-DD"),
+        timebirth: req.body.timebirth,
+        placebirth: req.body.placebirth,
+        currentaddress: req.body.currentaddress,
+        city: req.body.city,
+        pincode: req.body.pincode,
       }
+    }, {
+      new: true
+    }
     );
     res.status(200).send({ message: "Data Updated Successfully!", data: data });
   } catch (error) {
