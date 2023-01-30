@@ -12,7 +12,7 @@ exports.signup = (req, res) => {
     email: req.body.email,
     OTPVerification: req.body.OTPVerification,
     password: bcrypt.hashSync(req.body.password, 8),
-    wallet: req.body.wallet
+    wallet: req.body.wallet,
   });
 
   user.save((err, user) => {
@@ -114,7 +114,12 @@ exports.signin = (req, res) => {
       }
 
       let token = jwt.sign(
-        { id: user.id, username: user.username, number: user.number, wallet: user.wallet },
+        {
+          id: user.id,
+          username: user.username,
+          number: user.number,
+          wallet: user.wallet,
+        },
         config.secret,
         {
           expiresIn: config.jwtExpiration,
@@ -132,7 +137,7 @@ exports.signin = (req, res) => {
         id: user._id,
         username: user.username,
         number: user.number,
-        wallet:user.wallet,
+        wallet: user.wallet,
         roles: authorities,
         access: token,
         refresh: refreshToken,
@@ -180,7 +185,7 @@ exports.refreshToken = async (req, res) => {
             id: refreshToken.user._id,
             username: user.username,
             number: user.number,
-            wallet: user.wallet
+            wallet: user.wallet,
           },
           config.secret,
           {
@@ -230,5 +235,23 @@ exports.getUserById = async (req, res) => {
     res.status(200).json(other);
   } catch (err) {
     res.status(500).json(err);
+  }
+};
+
+//update user
+exports.updateUser = async (req, res) => {
+  const _id = req.params.id;
+  con
+  try {
+    const data = await User.updateOne(
+      { _id },
+      { status: req.body.status },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({ message: "Data Updated Successfully!", data: data });
+  } catch (error) {
+    res.status(500).send({ message: error });
   }
 };

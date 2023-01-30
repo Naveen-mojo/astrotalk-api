@@ -1,7 +1,7 @@
 const { verifySignUp } = require("../middlewares");
 // const { AstroverifySignUp } = require("../astrologerMiddlewares");
 const controller = require("../controllers/auth.controller");
-const astroController = require('../controllers/astro.controller')
+const astroController = require("../controllers/astro.controller");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -16,14 +16,17 @@ module.exports = function (app) {
     "/api/auth/signup",
     [
       verifySignUp.checkDuplicateUsernameOrEmail,
-      verifySignUp.checkRolesExisted
+      verifySignUp.checkRolesExisted,
     ],
     controller.signup
   );
 
   app.post("/api/auth/astro/signin", astroController.Astrologersignin);
 
-  app.post("/api/auth/astro/refreshtoken", astroController.AstrologerrefreshToken);
+  app.post(
+    "/api/auth/astro/refreshtoken",
+    astroController.AstrologerrefreshToken
+  );
 
   app.post("/api/auth/signin", controller.signin);
 
@@ -32,4 +35,6 @@ module.exports = function (app) {
   app.post("/api/auth/signinfirststep", controller.signinFirstStep);
 
   app.post("/api/auth/refreshtoken", controller.refreshToken);
+
+  app.patch("/api/auth/update/:id", controller.updateUser);
 };
