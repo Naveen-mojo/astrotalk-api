@@ -20,6 +20,7 @@ db.horoscope = require('./horoscope.model')
 db.horoscopecontent = require('./horoscopecontent.model')
 db.zodiac = require('./zodiac.model')
 db.zodiacCompatibility = require('./zodiacCompatibility.model')
+db.chat = require('./chat.model')
 
 db.ROLES = ["user", "admin", "moderator"];
 

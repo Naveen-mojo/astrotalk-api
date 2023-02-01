@@ -5,8 +5,9 @@ const { astro: Astro, astroRefreshToken: AstroRefreshToken, role: Role } = db;
 const jwt = require("jsonwebtoken");
 
 exports.addAstro = (req, res) => {
-  if (!req.body.astrologerName) {
-    res.status(400).send({ message: "please fill all required fields" });
+  console.log(req.body)
+  if (!req.body.astrologerName || !req.body.email) {
+    res.status(400).send({ message: "Please fill all required fields" });
     return;
   }
   const newAstro = new Astro({
@@ -28,9 +29,8 @@ exports.addAstro = (req, res) => {
     language: JSON.parse(req.body.language),
     chatRate: req.body.chatRate,
     callRate: req.body.callRate,
-    contactExt: req.body.contactExt,
     contactNumber: req.body.contactNumber,
-    profileImage: `http://localhost:8080/upload/${req.file.filename}`,
+    profileImage: req.file ? `http://localhost:8080/upload/${req.file.filename}` : 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg',
     galleryImage: req.body.galleryImage,
     isActive: req.body.isActive,
     status: req.body.status,

@@ -14,6 +14,7 @@ const horoscopeController = require('../controllers/horoscope.controller')
 const horoscopeContentController = require('../controllers/horoscopeContent.controller')
 const zodiacController = require('../controllers/zodiac.controller')
 const zodiacCompatibilityController = require('../controllers/zodiacCompatibility.controller')
+const chatController = require('../controllers/chat.controller')
 
 
 module.exports = function (app) {
@@ -105,6 +106,10 @@ module.exports = function (app) {
   app.post('/zodiacCompatibility/add', zodiacCompatibilityController.addZodiacCompatibility)
 
 
+  // chat Api
+
+  app.post('/api/chat/add', chatController.addChat)
+  app.patch('/api/chat/update', chatController.updateChat)
 
 
   app.get("/api/test/user", [authJwt.verifyToken], controller.userBoard);
