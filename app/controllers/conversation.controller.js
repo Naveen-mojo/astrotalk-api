@@ -3,51 +3,29 @@ const { conversation: Conversation } = db;
 
 // Add Conversation
 exports.addConversation = async (req, res) => {
-    // if (!req.body.senderId || !req.body.receiverId) {
-    //     res.status(400).send({ message: "please fill all required fields" })
-    //     return;
-    // }
-    // const newConversation = new Conversation({
-    //     members: [req.body.receiverId, req.body.senderId],
-    // });
-
+    if (!req.body.senderId || !req.body.receiverId) {
+        res.status(400).send({ message: "please fill all required fields" })
+        return;
+    }
     const newConversation = new Conversation({
-        "astroId": req.body.astroId,
-        "userId": req.body.userId,
-        "message": {
-            "text": req.body.textMesg,
-            "sender": req.body.sender,
-            "chattime": new Date()
-        }
-    })
+        members: [req.body.receiverId, req.body.senderId],
+    });
+
+    const conversationFind = await Conversation.findOne({
+        members: [req.body.receiverId, req.body.senderId],
+    });
 
     try {
 
-        const conversationFind = await Conversation.findOne({
-            astroId: req.body.astroId, userId: req.body.userId,
-        });
-
-        console.log("conversationFind", conversationFind);
-
-        if (conversationFind) {
-            const data = await Conversation.message.updateMany({ _id: conversationFind._id }, {
-                $set: [{
-                    text: 'Helllo',
-                    sender: 'astro',
-                    chattime: new Date()
-                },
-                {
-                    text: 'Helllo',
-                    sender: 'astro',
-                    chattime: new Date()
-                }]
-            }, {
-                new: true
-            })
-            console.log("data", data);   
+        if (conversationFind !== null) {
+            console.log("Null not find")
+            res.status(200).json({ message: "Update the value" });
+        } else {
+            console.log("Null Find")
+            const savedConversation = await newConversation.save();
+            res.status(200).json(savedConversation);
         }
-        const savedConversation = await newConversation.save();
-        res.status(200).json(savedConversation);
+
     } catch (err) {
         res.status(500).json(err);
     }

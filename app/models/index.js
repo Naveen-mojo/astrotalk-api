@@ -22,6 +22,8 @@ db.zodiac = require('./zodiac.model')
 db.zodiacCompatibility = require('./zodiacCompatibility.model')
 db.chat = require('./chat.model')
 
+db.paymenthistory = require('./stripe.model')
+
 db.ROLES = ["user", "admin", "moderator"];
 
 module.exports = db;

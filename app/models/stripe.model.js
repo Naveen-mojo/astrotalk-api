@@ -1,46 +1,38 @@
 const mongoose = require('mongoose');
 
-const Order = mongoose.model(
-    'Order',
+const PaymentHistory = mongoose.model(
+    'PaymentHistory',
     new mongoose.Schema({
+        id: {
+            type: String,
+            required: true
+        },
         userId: {
             type: String,
             required: true
         },
-        customerId: {
-            type: String
-        },
-        paymentIntentId: {
-            type: String
-        },
-        product: [
-            {
-                id: {
-                    type: String
-                },
-                name: {
-                    type: String
-                },
-                price: {
-                    type: String
-                },
-                cartQuantity: {
-                    type: Number
-                }
-            }
-        ],
-        subTotal: {
+        amount: {
             type: Number
         },
-        total: {
-            type: Number,
-            required: true
+        amount_received: {
+            type: Number
         },
-        payment_status: {
+        created: {
+            type: Number
+        },
+        currency: {
             type: String,
-            required: true
+        },
+        payment_method: {
+            type: String
+        },
+        payment_method_types: {
+            type: Array
+        },
+        status: {
+            type: String
         }
     }, { timestamps: true })
 )
 
-module.exports = Order
+module.exports = PaymentHistory;

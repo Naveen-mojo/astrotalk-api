@@ -15,6 +15,11 @@ const horoscopeContentController = require('../controllers/horoscopeContent.cont
 const zodiacController = require('../controllers/zodiac.controller')
 const zodiacCompatibilityController = require('../controllers/zodiacCompatibility.controller')
 const chatController = require('../controllers/chat.controller')
+const stripeController = require('../controllers/stripe')
+
+
+const Stripe = require("stripe");
+const stripe = Stripe("sk_test_51LpoOQSCkptFWpk2yUOUAKc1UDTdwZ6SzleVz9TG7BnQWbEr4sOpNdZweiF0Ba16GLhugR9Zs8pLzo7P39fjq24p00IfBRUdn1")
 
 
 module.exports = function (app) {
@@ -114,6 +119,9 @@ module.exports = function (app) {
 
   app.get("/api/test/user", [authJwt.verifyToken], controller.userBoard);
 
+  app.post('/pay', stripeController.stripePaymentNew)
+
+
   app.get(
     "/api/test/mod",
     [authJwt.verifyToken, authJwt.isModerator],
@@ -125,4 +133,59 @@ module.exports = function (app) {
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminBoard
   );
+
+  // confirm the paymentIntent
+  app.post('/pay', async (request, response) => {
+    try {
+      // Create the PaymentIntent
+      let intent = await stripe.paymentIntents.create({
+        payment_method: request.body.payment_method_id,
+        description: "Test payment",
+        amount: request.body.amount * 100,
+        currency: 'inr',
+        confirmation_method: 'manual',
+        confirm: true,
+        payment_method_types: [
+          "card"
+        ],
+      });
+      // Send the response to the client
+      response.send(generateResponse(intent));
+
+      const newChat = new Chat({
+        userId: req.body.userId,
+        astrologerId: req.body.astrologerId,
+        startTime: req.body.startTime,
+        endTime: req.body.endTime,
+      });
+
+      try {
+        const savedChat = await newChat.save();
+        res.status(200).json(savedChat);
+      } catch (err) {
+        res.status(500).json(err);
+      }
+
+    } catch (e) {
+      // Display error on client
+      return response.send({ error: e.message });
+    }
+  });
+
+  const generateResponse = (intent) => {
+    if (intent.status === 'succeeded') {
+      // The payment didn’t need any additional actions and completed!
+      // Handle post-payment fulfillment
+      return {
+        success: true
+      };
+    } else {
+      // Invalid status
+      return {
+        error: 'Invalid PaymentIntent status'
+      };
+    }
+  };
+
 };
+

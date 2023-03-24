@@ -1,5 +1,6 @@
+const db = require('../models');
+const { stripe: StripeModel } = db;
 const Stripe = require("stripe");
-const Order = require("../models/stripe.model");
 const stripe = Stripe("sk_test_51LpoOQSCkptFWpk2yUOUAKc1UDTdwZ6SzleVz9TG7BnQWbEr4sOpNdZweiF0Ba16GLhugR9Zs8pLzo7P39fjq24p00IfBRUdn1")
 require('dotenv')
 
@@ -88,7 +89,7 @@ exports.webhooks = async (req, res) => {
   }
 
 
-  if (eventType === 'checkout.session.completed') { 
+  if (eventType === 'checkout.session.completed') {
     stripe.customers.retrieve(data.customer).then((customer) => {
       createOrder(customer, data)
     }).catch((err) => {
@@ -98,5 +99,64 @@ exports.webhooks = async (req, res) => {
 
   // Return a 200 res to acknowledge receipt of the event
   res.send().end();
+
+}
+
+
+exports.stripePaymentNew = async (req, res) => {
+
+  try {
+    // Create the PaymentIntent
+    let intent = await stripe.paymentIntents.create({
+      payment_method: req.body.payment_method_id,
+      description: "Test payment",
+      amount: req.body.amount * 100,
+      currency: 'inr',
+      confirmation_method: 'manual',
+      confirm: true,
+    });
+    // Send the res to the client
+    // res.send(generateResponse(intent));
+
+    console.log("intent", intent)
+
+    const stripeData = new StripeModel({
+      id: req.body.id,
+      userId: req.body.userId,
+      amount: req.body.amount,
+      amount_received: req.body.amount_received,
+      created: req.body.created,
+      currency: req.body.currency,
+      payment_method: req.body.payment_method,
+      payment_method_types: req.body.payment_method_types,
+      status: req.body.status
+    });
+
+    try {
+      const savedData = await stripeData.save();
+      res.status(200).json(savedData);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+
+  } catch (e) {
+    // Display error on client
+    return res.send({ error: e.message });
+  }
+};
+
+const generateResponse = (intent) => {
+  if (intent.status === 'succeeded') {
+    // The payment didn’t need any additional actions and completed!
+    // Handle post-payment fulfillment
+    return {
+      success: true
+    };
+  } else {
+    // Invalid status
+    return {
+      error: 'Invalid PaymentIntent status'
+    };
+  }
 
 }
