@@ -11,6 +11,12 @@ const PaymentHistory = mongoose.model(
             type: String,
             required: true
         },
+        name: {
+            type: String
+        },
+        email: {
+            type: String
+        },
         amount: {
             type: Number
         },

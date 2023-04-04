@@ -13,7 +13,6 @@ exports.signup = (req, res) => {
     email: req.body.email,
     OTPVerification: req.body.OTPVerification,
     password: bcrypt.hashSync(req.body.password, 8),
-    wallet: req.body.wallet,
   });
 
   user.save((err, user) => {
@@ -119,7 +118,6 @@ exports.signin = (req, res) => {
           id: user.id,
           firstname: user.firstname,
           number: user.number,
-          wallet: user.wallet,
         },
         config.secret,
         {
@@ -138,7 +136,6 @@ exports.signin = (req, res) => {
         id: user._id,
         firstname: user.firstname,
         number: user.number,
-        wallet: user.wallet,
         roles: authorities,
         access: token,
         refresh: refreshToken,
@@ -186,7 +183,6 @@ exports.refreshToken = async (req, res) => {
             id: refreshToken.user._id,
             firstname: user.firstname,
             number: user.number,
-            wallet: user.wallet,
           },
           config.secret,
           {

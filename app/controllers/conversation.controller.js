@@ -18,10 +18,8 @@ exports.addConversation = async (req, res) => {
     try {
 
         if (conversationFind !== null) {
-            console.log("Null not find")
             res.status(200).json({ message: "Update the value" });
         } else {
-            console.log("Null Find")
             const savedConversation = await newConversation.save();
             res.status(200).json(savedConversation);
         }

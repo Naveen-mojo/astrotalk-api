@@ -21,8 +21,9 @@ db.horoscopecontent = require('./horoscopecontent.model')
 db.zodiac = require('./zodiac.model')
 db.zodiacCompatibility = require('./zodiacCompatibility.model')
 db.chat = require('./chat.model')
-
+db.userwallet = require('./UserWallet.model')
 db.paymenthistory = require('./stripe.model')
+db.feedbackform = require('./FeedbackFrom.model')
 
 db.ROLES = ["user", "admin", "moderator"];
 

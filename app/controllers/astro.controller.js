@@ -246,3 +246,23 @@ exports.updateStatus = async (req, res) => {
     res.status(500).send({ message: error });
   }
 }
+
+exports.getAstroSearch = async (req, res) => {
+  try {
+    const astroName = req.params.name
+
+    const astro = await Astro.find({
+      astrologerName: astroName,
+    }, { password: 0, verifyCode: 0 });
+
+    // if (astro.length <= 0 || astro == null) {
+    //   res.status(200).send({ message: "Data Not Found" });
+    //   return;
+    // }
+
+    res.status(200).json(astro);
+
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};

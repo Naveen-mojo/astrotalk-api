@@ -8,7 +8,6 @@ const User = mongoose.model(
     email: String,
     OTPVerification: String,
     password: String,
-    wallet: Number,
     lastname: String,
     datebirth: String,
     timebirth: String,

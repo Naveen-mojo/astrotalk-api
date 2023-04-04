@@ -15,7 +15,6 @@ exports.addZodiac = async (req, res) => {
     }
 }
 
-// Get Message
 exports.getZodiac = async (req, res) => {
     try {
         const zodiac = await Zodiac.find({});
