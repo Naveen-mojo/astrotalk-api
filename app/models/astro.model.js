@@ -9,6 +9,7 @@ const Astro = mongoose.model(
         },
         email: {
             type: String,
+            unique: true
         },
         shortName: {
             type: String,

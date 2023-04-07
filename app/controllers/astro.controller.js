@@ -3,11 +3,11 @@ const db = require("../models");
 const { astro: Astro, astroRefreshToken: AstroRefreshToken, role: Role } = db;
 
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 exports.addAstro = (req, res) => {
-  console.log(req.body)
-  if (!req.body.astrologerName || !req.body.email) {
-    res.status(400).send({ message: "Please fill all required fields" });
+  if (!req.body.astrologerName || !req.body.email || !req.body.contactNumber || !req.body.verifyCode) {
+    res.status(400).send({ message: "Please fill all required fields ( * ) filleds are mandatory field. " });
     return;
   }
   const newAstro = new Astro({
@@ -38,7 +38,7 @@ exports.addAstro = (req, res) => {
     interviewTime: req.body.interviewTime,
     incomeSource: req.body.incomeSource,
     isLoggedin: req.body.isLoggedin,
-    password: req.body.password,
+    password: bcrypt.hashSync(req.body.password, 8),
   });
   try {
     const saveAstro = newAstro.save();
@@ -81,8 +81,7 @@ exports.getByIdAstro = async (req, res) => {
 
 exports.Astrologersignin = (req, res) => {
   Astro.findOne({
-    email: req.body.email,
-    password: req.body.password,
+    email: req.body.email
   })
     .populate("roles", "-__v")
     .exec(async (err, astro) => {
@@ -92,10 +91,26 @@ exports.Astrologersignin = (req, res) => {
       }
 
       if (!astro) {
-        return res
-          .status(404)
-          .send({ message: "Email or Passwrod does not match" });
+        return res.status(404).send({ message: "Email or Passwrod does not match." });
       }
+
+      let passwordIsValid = bcrypt.compareSync(
+        req.body.password,
+        astro.password
+      );
+
+      if (!passwordIsValid) {
+        return res.status(401).send({
+          accessToken: null,
+          message: "Invalid Password!",
+        });
+      }
+
+      // if (!astro) {
+      //   return res
+      //     .status(404)
+      //     .send({ message: "Email or Passwrod does not match" });
+      // }
 
       let token = jwt.sign(
         {
@@ -192,17 +207,17 @@ exports.updateAstroProfile = async (req, res) => {
       shortName: req.body.shortName,
       gender: req.body.gender,
       DOB: req.body.DOB,
-      primarySkills: req.body.primarySkills,
+      primarySkills: JSON.parse(req.body.primarySkills),
       hours: req.body.hours,
       isPlatform: req.body.isPlatform,
       monthlyEarning: req.body.monthlyEarning,
       nameOfPlatform: req.body.nameOfPlatform,
-      skill: req.body.skill,
+      skill: JSON.parse(req.body.skill),
       description: req.body.description,
       cityName: req.body.cityName,
       onBoard: req.body.onBoard,
       exp: req.body.exp,
-      language: req.body.language,
+      language: JSON.parse(req.body.language),
       chatRate: req.body.chatRate,
       callRate: req.body.callRate,
       contactExt: req.body.contactExt,
@@ -213,7 +228,7 @@ exports.updateAstroProfile = async (req, res) => {
       interviewTime: req.body.interviewTime,
       incomeSource: req.body.incomeSource,
       isLoggedin: req.body.isLoggedin,
-      password: req.body.password,
+      password: bcrypt.hashSync(req.body.password, 8),
       status: req.body.status
     }
     const astro = await Astro.findByIdAndUpdate(_id, data, {
