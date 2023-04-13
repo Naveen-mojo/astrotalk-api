@@ -106,17 +106,12 @@ exports.Astrologersignin = (req, res) => {
         });
       }
 
-      // if (!astro) {
-      //   return res
-      //     .status(404)
-      //     .send({ message: "Email or Passwrod does not match" });
-      // }
-
       let token = jwt.sign(
         {
           id: astro.id,
           username: astro.astrologerName,
           number: astro.contactNumber,
+          isActive: astro.isActive,
         },
         config.secret,
         {
@@ -176,6 +171,7 @@ exports.AstrologerrefreshToken = async (req, res) => {
             id: refreshToken.astro._id,
             username: astro.astrologerName,
             number: astro.contactNumber,
+            isActive: astro.isActive,
           },
           config.secret,
           {
@@ -222,7 +218,7 @@ exports.updateAstroProfile = async (req, res) => {
       callRate: req.body.callRate,
       contactExt: req.body.contactExt,
       contactNumber: req.body.contactNumber,
-      profileImage: req.file ? `http://localhost:8080/upload/${req.file.filename}` : 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg',
+      profileImage: req.file ? `http://localhost:8080/upload/${req.file.filename}` : req.body.profileImage,
       galleryImage: req.body.galleryImage,
       isActive: req.body.isActive,
       interviewTime: req.body.interviewTime,
@@ -262,22 +258,19 @@ exports.updateStatus = async (req, res) => {
   }
 }
 
-exports.getAstroSearch = async (req, res) => {
-  try {
-    const astroName = req.params.name
 
-    const astro = await Astro.find({
-      astrologerName: astroName,
-    }, { password: 0, verifyCode: 0 });
+exports.getAstroSearch = (req, res) => {
+  const astrologerName = req.query.astrologerName;
+  var condition = astrologerName ? { astrologerName: { $regex: new RegExp(astrologerName), $options: "i" }, isActive: 1 } : {isActive: 1};
 
-    // if (astro.length <= 0 || astro == null) {
-    //   res.status(200).send({ message: "Data Not Found" });
-    //   return;
-    // }
-
-    res.status(200).json(astro);
-
-  } catch (error) {
-    res.status(500).send({ message: error });
-  }
+  Astro.find(condition)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Astro."
+      });
+    });
 };

@@ -67,3 +67,38 @@ exports.getFeedbackForm = async (req, res) => {
         res.status(500).json(err);
     }
 };
+
+// Get Comments By Pagination
+exports.findCommentPagination = (req, res) => {
+    const getPagination = (page, size) => {
+        const limit = size ? +size : 3;
+        const offset = page ? page * limit : 0;
+        return { limit, offset };
+    };
+
+    const getPagingData = (data, page, limit, count) => {  
+        const total = count;
+        const currentPage = page ? +page : 0;
+        const total_pages = Math.ceil(total / limit);
+        return { data, pagination: { total, total_pages, currentPage } };
+    };
+
+    const { page, size } = req.query;
+    const { limit, offset } = getPagination(page, size);
+    FeedbackForm.find({}).countDocuments().exec(function (err, count) {
+        FeedbackForm.find({}).limit(limit).skip(offset)
+            .then((data) => {
+                const response = getPagingData(data, page, limit, count);
+                if (response.pagination.currentPage < response.pagination.total_pages) {
+                    res.send(response);
+                } else {
+                    res.send({ "results": response.results, "pagination": response.pagination = { err: `queried page ${response.pagination.currentPage} is >= to maximum page number ${response.pagination.total_pages}` } });
+                }
+            })
+            .catch((err) => {
+                res.status(500).send({
+                    message: err.message || "Some error occurred while retrieving post.",
+                });
+            });
+    })
+};

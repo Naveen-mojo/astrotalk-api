@@ -73,7 +73,7 @@ module.exports = function (app) {
 
   app.patch("/api/astro/update/status/:id", astroController.updateStatus);
 
-  app.get("/api/astro/search/:name", astroController.getAstroSearch);
+  app.get("/api/astro/search", astroController.getAstroSearch);
 
   // Video Call Api
 
@@ -125,6 +125,7 @@ module.exports = function (app) {
 
   app.post('/api/feedbackform/add', feedbackFormController.addFeedbackForm)
   app.get('/api/feedbackform/:id', feedbackFormController.getFeedbackForm)
+  app.get('/api/feedbackform', feedbackFormController.findCommentPagination)
 
   app.get(
     "/api/test/mod",
