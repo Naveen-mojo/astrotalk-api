@@ -124,8 +124,15 @@ module.exports = function (app) {
   // FeedbackForm Api
 
   app.post('/api/feedbackform/add', feedbackFormController.addFeedbackForm)
-  app.get('/api/feedbackform/:id', feedbackFormController.getFeedbackForm)
-  app.get('/api/feedbackform', feedbackFormController.findCommentPagination)
+  app.get('/api/feedbackform', feedbackFormController.getFeedbackForm)
+  // app.get('/api/feedbackform', feedbackFormController.findCommentPagination)
+
+
+  // Zodaic Compability
+
+  app.get('/api/zodiacpair/id/:selfId/partner/:partnerId', zodiacCompatibilityController.getZodiacPair);
+  app.get('/api/horoscope/:type/:zodiac', horoscopeController.getHoroscope)
+  app.get('/api/horoscope/category', horoscopeController.getCategory)
 
   app.get(
     "/api/test/mod",

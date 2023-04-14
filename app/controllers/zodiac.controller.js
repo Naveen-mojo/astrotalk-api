@@ -15,9 +15,11 @@ exports.addZodiac = async (req, res) => {
     }
 }
 
+// Get Message
 exports.getZodiac = async (req, res) => {
     try {
-        const zodiac = await Zodiac.find({});
+        const zodiac = await Zodiac.find({}).sort({ 'c_id': 1 })
+
         res.status(200).json(zodiac);
     } catch (err) {
         res.status(500).json(err);

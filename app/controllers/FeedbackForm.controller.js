@@ -23,9 +23,25 @@ const getAstroAvgRating = (score, res_rating, total_res) => {
 
 exports.getFeedbackForm = async (req, res) => {
     try {
+        const getPagination = (page, size) => {
+            const limit = size ? +size : 3;
+            const offset = page ? page * limit : 0;
+            return { limit, offset };
+        };
+
+        const getPagingData = (data, page, limit, count) => {
+            const total = count;
+            const currentPage = page ? +page : 0;
+            const total_pages = Math.ceil(total / limit);
+            return { data, pagination: { total, total_pages, currentPage } };
+        };
+
+        const { astroId, page, size } = req.query;
+        const { limit, offset } = getPagination(page, size);
+
         const rating_star = [5, 4, 3, 2, 1, 4.5, 3.5, 2.5, 1.5, 0.5]
         rating_len = []
-        const astroId = req.params.id
+        
         const feedbackform = await FeedbackForm.find({ astroId });
         feedbackform.map((value) => {
             rating_len.push(value.rating)
@@ -61,7 +77,23 @@ exports.getFeedbackForm = async (req, res) => {
         }
 
         getAstroAvgRating(rating_star, res_rating, total_res)
-        res.status(200).json({ rating: { star_rating, indivisualRating }, feedback: feedbackform });
+
+        FeedbackForm.find({ astroId }).countDocuments().exec(function (err, count) {
+            FeedbackForm.find({ astroId }).limit(limit).skip(offset)
+                .then((data) => {
+                    const response = getPagingData(data, page, limit, count);
+                    if (response.pagination.currentPage < response.pagination.total_pages) {
+                        res.send({ rating: { star_rating, indivisualRating }, feedback: response });
+                    } else {
+                        res.send({ "results": response.results, "pagination": response.pagination = { err: `queried page ${response.pagination.currentPage} is >= to maximum page number ${response.pagination.total_pages}` } });
+                    }
+                })
+                .catch((err) => {
+                    res.status(500).send({
+                        message: err.message || "Some error occurred while retrieving post.",
+                    });
+                });
+        })
 
     } catch (err) {
         res.status(500).json(err);
@@ -69,36 +101,36 @@ exports.getFeedbackForm = async (req, res) => {
 };
 
 // Get Comments By Pagination
-exports.findCommentPagination = (req, res) => {
-    const getPagination = (page, size) => {
-        const limit = size ? +size : 3;
-        const offset = page ? page * limit : 0;
-        return { limit, offset };
-    };
+// exports.findCommentPagination = (req, res) => {
+//     const getPagination = (page, size) => {
+//         const limit = size ? +size : 3;
+//         const offset = page ? page * limit : 0;
+//         return { limit, offset };
+//     };
 
-    const getPagingData = (data, page, limit, count) => {  
-        const total = count;
-        const currentPage = page ? +page : 0;
-        const total_pages = Math.ceil(total / limit);
-        return { data, pagination: { total, total_pages, currentPage } };
-    };
+//     const getPagingData = (data, page, limit, count) => {
+//         const total = count;
+//         const currentPage = page ? +page : 0;
+//         const total_pages = Math.ceil(total / limit);
+//         return { data, pagination: { total, total_pages, currentPage } };
+//     };
 
-    const { page, size } = req.query;
-    const { limit, offset } = getPagination(page, size);
-    FeedbackForm.find({}).countDocuments().exec(function (err, count) {
-        FeedbackForm.find({}).limit(limit).skip(offset)
-            .then((data) => {
-                const response = getPagingData(data, page, limit, count);
-                if (response.pagination.currentPage < response.pagination.total_pages) {
-                    res.send(response);
-                } else {
-                    res.send({ "results": response.results, "pagination": response.pagination = { err: `queried page ${response.pagination.currentPage} is >= to maximum page number ${response.pagination.total_pages}` } });
-                }
-            })
-            .catch((err) => {
-                res.status(500).send({
-                    message: err.message || "Some error occurred while retrieving post.",
-                });
-            });
-    })
-};
+//     const { astroId, page, size } = req.query;
+//     const { limit, offset } = getPagination(page, size);
+//     FeedbackForm.find({ astroId }).countDocuments().exec(function (err, count) {
+//         FeedbackForm.find({ astroId }).limit(limit).skip(offset)
+//             .then((data) => {
+//                 const response = getPagingData(data, page, limit, count);
+//                 if (response.pagination.currentPage < response.pagination.total_pages) {
+//                     res.send(response);
+//                 } else {
+//                     res.send({ "results": response.results, "pagination": response.pagination = { err: `queried page ${response.pagination.currentPage} is >= to maximum page number ${response.pagination.total_pages}` } });
+//                 }
+//             })
+//             .catch((err) => {
+//                 res.status(500).send({
+//                     message: err.message || "Some error occurred while retrieving post.",
+//                 });
+//             });
+//     })
+// };
