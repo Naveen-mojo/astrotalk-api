@@ -55,23 +55,32 @@ exports.addAstro = (req, res) => {
 };
 
 exports.getAstro = async (req, res) => {
+  var astroId = req.query.id;
   try {
-    const astro = await Astro.find({
-      isActive: 1,
-    }, { password: 0, verifyCode: 0 });
-    res.status(200).json(astro);
+    if (!astroId) {
+      const astro = await Astro.find({
+        isActive: 1,
+      }, { password: 0, verifyCode: 0 });
+      res.status(200).json(astro);
+    } else {
+      const astro = await Astro.findById({
+        _id: astroId,
+        isActive: 1,
+      }, { password: 0, verifyCode: 0 });
+      res.status(200).json(astro);
+    }
   } catch (error) {
+    console.log(error);
     res.status(500).send({ message: error });
   }
 };
 
-exports.getByIdAstro = async (req, res) => {
-  var astroId = req.params.id;
+
+exports.getAdminAstro = async (req, res) => {
   try {
-    const astro = await Astro.findById({
-      _id: astroId,
-      isActive: 1,
+    const astro = await Astro.find({
     }, { password: 0, verifyCode: 0 });
+
     res.status(200).json(astro);
   } catch (error) {
     console.log(error);
@@ -258,10 +267,22 @@ exports.updateStatus = async (req, res) => {
   }
 }
 
+exports.updateUserActivate = async (req, res) => {
+  const _id = req.query.id;
+  try {
+    const data = await Astro.updateOne({ _id }, { isActive: req.body.isActive }, {
+      new: true
+    });
+    res.status(200).send({ message: "Data Updated Successfully!", data: data });
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+}
+
 
 exports.getAstroSearch = (req, res) => {
   const astrologerName = req.query.astrologerName;
-  var condition = astrologerName ? { astrologerName: { $regex: new RegExp(astrologerName), $options: "i" }, isActive: 1 } : {isActive: 1};
+  var condition = astrologerName ? { astrologerName: { $regex: new RegExp(astrologerName), $options: "i" }, isActive: 1 } : { isActive: 1 };
 
   Astro.find(condition)
     .then(data => {

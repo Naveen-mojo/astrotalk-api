@@ -67,13 +67,17 @@ module.exports = function (app) {
 
   app.get("/api/astro", astroController.getAstro);
 
-  app.get("/api/astro/user/:id", astroController.getByIdAstro);
-
   app.patch("/api/astro/update/:id", upload.single('profileImage'), astroController.updateAstroProfile);
 
   app.patch("/api/astro/update/status/:id", astroController.updateStatus);
 
   app.get("/api/astro/search", astroController.getAstroSearch);
+
+  // Admin Astrologer Api
+
+  app.get("/api/admin/astro", astroController.getAdminAstro);  
+
+  app.patch("/api/admin/astro/update", astroController.updateUserActivate);  
 
   // Video Call Api
 
@@ -133,6 +137,7 @@ module.exports = function (app) {
   app.get('/api/zodiacpair/id/:selfId/partner/:partnerId', zodiacCompatibilityController.getZodiacPair);
   app.get('/api/horoscope/:type/:zodiac', horoscopeController.getHoroscope)
   app.get('/api/horoscope/category', horoscopeController.getCategory)
+
 
   app.get(
     "/api/test/mod",

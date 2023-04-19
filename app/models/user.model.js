@@ -15,6 +15,8 @@ const User = mongoose.model(
     currentaddress: String,
     city: String,
     pincode: Number,
+    is_verified: Boolean,
+    status: Boolean,
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,

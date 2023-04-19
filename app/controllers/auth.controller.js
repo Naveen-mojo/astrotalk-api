@@ -200,36 +200,22 @@ exports.refreshToken = async (req, res) => {
   }
 };
 
-// exports.getUserById = (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-//     User.findById(userId)
-//       .populate("roles", "-__v").select(['-password', '-OTPVerification', '-roles'])
-//       .exec((err, user) => {
-//         if (err) {
-//           console.log(err)
-//           res.status(500).send({ message: err });
-//           return;
-//         }
-//         res.status(200).send(user);
-//       });
-//   } catch (error) {
-//     res.status(500).send({
-//       message: error,
-//     });
-//   }
-// };
-
 //get a user
 exports.getUserById = async (req, res) => {
   const userId = req.query.userId;
   const firstname = req.query.firstname;
   try {
-    const user = userId
-      ? await User.findById(userId)
-      : await User.findOne({ firstname: firstname });
-    const { password, updatedAt, ...other } = user._doc;
-    res.status(200).json(other);
+    if (req.query.userId || req.query.firstname) {
+      const user = userId
+        ? await User.findById(userId)
+        : await User.findOne({ firstname: firstname });
+      const { password, updatedAt, ...other } = user._doc;
+      res.status(200).json(other);
+    } else {
+      const user = await User.find({}, { password: 0 });
+      res.status(200).json(user);
+    }
+
   } catch (err) {
     res.status(500).json(err);
   }
