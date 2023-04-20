@@ -2,6 +2,7 @@ const { verifySignUp } = require("../middlewares");
 // const { AstroverifySignUp } = require("../astrologerMiddlewares");
 const controller = require("../controllers/auth.controller");
 const astroController = require("../controllers/astro.controller");
+const adminController = require("../controllers/adminauth.controller");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -37,4 +38,15 @@ module.exports = function (app) {
   app.post("/api/auth/refreshtoken", controller.refreshToken);
 
   app.patch("/api/auth/update/:id", controller.updateUser);
+
+  // Admin Auth Routes
+
+  app.post("/api/auth/admin/signup", adminController.addAdminUser);
+
+  app.post("/api/auth/admin/signin", adminController.AdminSignin);
+
+  app.post(
+    "/api/auth/admin/refreshtoken",
+    adminController.AdminAuthRefreshToken
+  );
 };

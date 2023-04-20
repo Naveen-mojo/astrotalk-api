@@ -24,6 +24,8 @@ db.chat = require('./chat.model')
 db.userwallet = require('./UserWallet.model')
 db.paymenthistory = require('./stripe.model')
 db.feedbackform = require('./FeedbackFrom.model')
+db.adminuser = require('./adminAuth.model')
+db.adminRefreshToken = require('./adminRefreshToken.model');
 
 db.ROLES = ["user", "admin", "moderator"];
 
