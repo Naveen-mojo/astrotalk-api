@@ -17,6 +17,9 @@ const stripeController = require('../controllers/stripe')
 const userWalletController = require('../controllers/userwallet.controller')
 const feedbackFormController = require('../controllers/FeedbackForm.controller')
 
+const blogController = require('../controllers/blog.controller')
+const blogCategoryController = require('../controllers/blogCategory.controller')
+
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -35,6 +38,14 @@ module.exports = function (app) {
     }
   })
 
+  const storageBlog = multer.diskStorage({
+    destination: path.join(__dirname, '../../upload/blog'),
+    filename: function (req, file, cb) {
+      // null as first argument means no error
+      cb(null, Date.now() + '-' + file.originalname)
+    }
+  })
+
   const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png') {
       cb(null, true)
@@ -44,6 +55,8 @@ module.exports = function (app) {
   }
 
   let upload = multer({ storage: storage, limits: { fileSize: 1024 * 1024 * 5 }, fileFilter: fileFilter });
+
+  let uploadBlog = multer({ storage: storageBlog, limits: { fileSize: 1024 * 1024 * 5 }, fileFilter: fileFilter });
 
 
   app.get("/api/test/all", controller.allAccess);
@@ -75,9 +88,9 @@ module.exports = function (app) {
 
   // Admin Astrologer Api
 
-  app.get("/api/admin/astro", astroController.getAdminAstro);  
+  app.get("/api/admin/astro", astroController.getAdminAstro);
 
-  app.patch("/api/admin/astro/update", astroController.updateUserActivate);  
+  app.patch("/api/admin/astro/update", astroController.updateUserActivate);
 
   // Video Call Api
 
@@ -138,6 +151,24 @@ module.exports = function (app) {
   app.get('/api/horoscope/:type/:zodiac', horoscopeController.getHoroscope)
   app.get('/api/horoscope/category', horoscopeController.getCategory)
 
+
+  // Blog Api
+
+  app.post('/api/blog', uploadBlog.single('images'), blogController.addBlog);
+  app.get('/api/blog', blogController.getBlog);
+  app.get('/api/blog/pagination', blogController.findBlogPagination);
+  app.get('/api/blog/single/:slug', blogController.getBlogBySlug);
+  app.patch('/api/blog/:id', uploadBlog.single('images'), blogController.UpdateBlog);
+  app.get('/api/blog/id/:id', blogController.getBlogById);
+  app.get("/api/blog/search", blogController.getBlogSearch);
+
+
+  // Blog Category Api
+  
+  app.post('/api/blog/category', blogCategoryController.addBlogCategory);
+  app.get('/api/blog/category', blogCategoryController.getBlogCategory);
+  app.patch('/api/blog/category/:id', blogCategoryController.UpdateBlogCategory);
+  app.get('/api/blog/category/:id', blogCategoryController.getBlogCategoryById);
 
   app.get(
     "/api/test/mod",
